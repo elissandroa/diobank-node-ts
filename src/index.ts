@@ -15,7 +15,8 @@ server.get('/', (req: Request, res: Response) => {
     res.status(200).json({ message: 'DioBank API' })
 })
 
-server.post('/users', userController.createUser)
+server.post('/users', userController.createUser);
+server.get('/users', userController.getAllUsers);
 
 server.listen(port, () => {
     console.log(`Server Rodando na porta ${port}!`);
