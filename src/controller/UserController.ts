@@ -1,23 +1,28 @@
 import express, { Request, Response } from 'express'
 import { UserService } from '../services/UserService';
 
-const userService = new UserService();
+
 
 export class UserController {
+    userService: UserService;
+
+    constructor(userService = new UserService()) {
+        this.userService = userService;
+    }
 
     createUser = (req: Request, res: Response) => {
         const { name, email, password } = req.body;
-        
-        if(!name){
-            res.status(400).json({message: 'Bad request: Nome obrigatório'})
+
+        if (!name) {
+            res.status(400).json({ message: 'Bad request: Nome obrigatório' })
         }
-        
-        userService.createUser(name, email, password);
+
+        this.userService.createUser(name, email, password);
         res.status(201).json({ message: 'Usuário criado' });
     }
 
     getAllUsers = (req: Request, res: Response) => {
-        const users = userService.getAllUsers();
+        const users = this.userService.getAllUsers();
         res.status(200).json(users);
     }
 }
