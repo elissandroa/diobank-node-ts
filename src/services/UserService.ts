@@ -38,4 +38,9 @@ export class UserService {
         return db;
     }
 
+    deleteUser = (id:number) => {
+        console.log('Deletando o usuario:', id);
+        return id;
+    }
+
 }
