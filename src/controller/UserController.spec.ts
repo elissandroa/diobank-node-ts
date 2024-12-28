@@ -5,8 +5,10 @@ import { makeMockResponse } from "../__mocks__/mockResponse.mock";
 
 describe('UserController', () => {
 
-    const mockUserService: Partial<UserService> = {
-        createUser: jest.fn()
+  
+     const mockUserService: Partial<UserService> = {
+        createUser: jest.fn(),
+        getAllUsers: jest.fn()
     }
 
     const userController = new UserController(mockUserService as UserService);
@@ -35,5 +37,15 @@ describe('UserController', () => {
         userController.createUser(mockRequest, MockResponse);
         expect(MockResponse.state.status).toBe(400);
         expect(MockResponse.state.json).toMatchObject({ message: 'Bad request: Nome obrigatório' });
+    })
+
+    it('Deve verificar se a função getAllUsers() está sendo chamada', () => {
+        const mockResponse = makeMockResponse();
+        const mockRequest = {
+            body: {}
+        } as Request
+        userController.getAllUsers(mockRequest, mockResponse);
+        expect(mockResponse.state.status).toBe(200);
+        expect(mockUserService.getAllUsers).toHaveBeenCalled();
     })
 })
