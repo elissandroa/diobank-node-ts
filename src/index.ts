@@ -2,11 +2,22 @@ import express from 'express';
 import { Request, Response } from 'express';
 import { json } from 'stream/consumers';
 import { router } from './routes';
+import 'reflect-metadata';
+import { AppDataSource } from './database';
 
 const port = 5000;
 
 
 const server = express();
+
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source iniciallizado!")
+    })
+    .catch((error) => {
+        console.error( error)
+    })
+
 
 server.use(express.json());
 
