@@ -14,11 +14,11 @@ export class UserController {
         const { name, email, password } = req.body;
 
         if (!name) {
-            res.status(400).json({ message: 'Bad request: Nome obrigatório' })
+           return res.status(400).json({ message: 'Bad request: Nome obrigatório' })
         }
 
         this.userService.createUser(name, email, password);
-        res.status(201).json({ message: 'Usuário criado' });
+        return res.status(201).json({ message: 'Usuário criado' });
     }
 
     getAllUsers = (req: Request, res: Response) => {

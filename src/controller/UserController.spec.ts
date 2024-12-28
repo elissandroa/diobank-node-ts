@@ -1,25 +1,39 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import { UserService } from "../services/UserService";
-import { UserController } from "./UserController"
-import { Params } from 'express-serve-static-core'
+import { UserController } from "./UserController";
+import { makeMockResponse } from "../__mocks__/mockResponse.mock";
 
 describe('UserController', () => {
-    const mockUserService: Partial<UserService> = {
 
+    const mockUserService: Partial<UserService> = {
+        createUser: jest.fn()
     }
 
     const userController = new UserController(mockUserService as UserService);
-    const makeMockRequest = ({ params, query }: { params?: Params, query?: Params }): Request => {
-        const request = {
-            params: params || {},
-            query: query || {}
-        } as unknown
-
-        return request as Request;
-    }
 
     it('Deve adicionar um novo usuário', () => {
-        const mockRequest = makeMockRequest({});
-        const response = userController.createUser(mockRequest);
+        const mockRequest = {
+            body: {
+                name: "Elissandro",
+                email: "elissandro@diobank.com",
+                password: "123456"
+            }
+        } as Request;
+        const MockResponse = makeMockResponse();
+        userController.createUser(mockRequest, MockResponse);
+        expect(MockResponse.state.status).toBe(201);
+        expect(MockResponse.state.json).toMatchObject({ message: 'Usuário criado' });
+    })
+    it('Deve informar um erro caso name não seja informado', () => {
+        const mockRequest = {
+            body: {
+                email: "elissandro@diobank.com",
+                password: "123456"
+            }
+        } as Request;
+        const MockResponse = makeMockResponse();
+        userController.createUser(mockRequest, MockResponse);
+        expect(MockResponse.state.status).toBe(400);
+        expect(MockResponse.state.json).toMatchObject({ message: 'Bad request: Nome obrigatório' });
     })
 })
