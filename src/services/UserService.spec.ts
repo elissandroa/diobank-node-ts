@@ -1,12 +1,31 @@
-import { mock } from "node:test";
-import { IUser, UserService } from "./UserService"
+import { UserService } from "./UserService"
+import { UserRepository } from "../repositories/UserRepository";
+
+jest.mock('../repositories/UserRepository');
+jest.mock('../database', () => {
+        initialize: jest.fn()
+})
+
+
+const mockUserRepository = require('../repositories/UserRepository');
 
 describe('UserService', () => {
-    const mockDb:IUser[] = []
-    const userservice  = new UserService(mockDb);
-    it('Deve adicionar um novo usuário', () => {
-        const mockConsole = jest.spyOn(global.console, 'log');
-        userservice.createUser('Elissandro', 'elissandro@email.com', '123456');
-        expect(mockConsole).toHaveBeenCalledWith('DB Atualizado!', mockDb);
-    })
-})
+    const userService = new UserService(mockUserRepository);
+
+    it('Deve adicionar um novo usuário', async () => {
+        mockUserRepository.createUser = jest.fn().mockImplementation(() => Promise.resolve({
+            id_user: 123456,
+            name: 'Elissandro',
+            email: 'elissandro@email.com',
+            password: '123456'
+        }));
+        const response = await userService.createUser('Elissandro', 'elissandro@email.com', '123456');
+        expect(mockUserRepository.createUser).toHaveBeenCalled();
+        expect(response).toMatchObject({
+            id_user: 123456,
+            name: 'Elissandro',
+            email: 'elissandro@email.com',
+            password: '123456'
+        });
+    });
+});

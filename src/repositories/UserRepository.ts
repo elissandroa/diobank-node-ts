@@ -9,7 +9,13 @@ export class UserRepository {
         this.manager = manager;
     }
 
-    creatUser = async (user:User) => {
+    createUser = async (user:User) => {
         return await this.manager.save(user);
+    }
+
+    getUser = async (userId:string):Promise<User | null> => {
+    return await this.manager.findOne(User, {
+        where:{user_id: userId}
+    })        
     }
 }
