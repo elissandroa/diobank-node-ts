@@ -22,7 +22,7 @@ export class UserController {
             return;
         }
 
-        if(!password) {
+        if (!password) {
             res.status(400).json({ message: 'Bad request: Senha obrigatória' })
             return;
         }
@@ -32,14 +32,14 @@ export class UserController {
     }
 
     getUser = (req: Request, res: Response) => {
-        this.userService.getUser();    
-        return res.status(200);
+        this.userService.getUser();
+        res.status(200);
     }
 
     deleteUser = (req: Request, res: Response) => {
         const { id } = req.params;
         const user = this.userService.deleteUser(parseInt(id));
-        res.status(204).json({message:`Usuário deletado: ${id}`});
+        res.status(204).json({ message: `Usuário deletado: ${id}` });
     }
-   
+
 }
