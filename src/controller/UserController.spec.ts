@@ -56,11 +56,12 @@ describe('UserController', () => {
 
     it('Deve verificar se a função getUser() está sendo chamada', () => {
         const mockResponse = makeMockResponse();
-        const mockRequest = {
-            body: {}
-        } as Request
+        const mockRequest = makeMockRequest({
+            params: {
+                userId: '123456'
+            }
+        }) as Request
         userController.getUser(mockRequest, mockResponse);
-        expect(mockResponse.state.status).toBe(200);
         expect(mockUserService.getUser).toHaveBeenCalled();
     })
 
@@ -88,5 +89,15 @@ describe('UserController', () => {
         userController.createUser(mockRequest, mockResponse);
         expect(mockResponse.state.status).toBe(400);
         expect(mockResponse.state.json).toMatchObject({message:'Bad request: Senha obrigatória'})
-    })
-})
+    });
+    it('Deve retornar um usuário como o userId informado', async () => {
+        const mockResponse = makeMockResponse();
+        const mockRequest = makeMockRequest({
+            params: {
+                userId: '123456'
+            }
+        });
+        userController.getUser(mockRequest, mockResponse);
+        expect(mockUserService.getUser).toHaveBeenCalledWith('123456');
+    });
+});

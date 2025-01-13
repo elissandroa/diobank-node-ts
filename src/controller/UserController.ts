@@ -31,9 +31,32 @@ export class UserController {
         res.status(201).json({ message: 'Usuário criado' });
     }
 
-    getUser = (req: Request, res: Response) => {
-        this.userService.getUser();
-        res.status(200);
+    getUser = async (req: Request, res: Response) => {
+        const { userId } = req.params;
+
+        if (!userId) {
+            res.status(400).json({ message: 'Bad request: userId is required' });
+            return;
+        }
+
+        try {
+            const user = await this.userService.getUser(userId);
+            if (user) {
+                res.status(200).json({
+                    user: {
+                        id: user.user_id,
+                        name: user.name,
+                        email: user.email,
+                    }   
+                });
+             } else {
+                res.status(404).json({ message: 'User not found' });
+                return;
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Internal server error' });
+            return;
+        }
     }
 
     deleteUser = (req: Request, res: Response) => {
